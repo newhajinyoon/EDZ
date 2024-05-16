@@ -1,85 +1,257 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>친희 말투 편환키</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f0f8ff; 
-        text-align: center; 
-        margin: 0;
-        padding: 0;
-    }
-    h1 {
-        color: #00008b; 
-    }
-    #inputText, #outputText {
-        width: 80%;
-        margin: 20px auto; 
-        padding: 10px;
-        border: 1px solid #00008b; 
-        border-radius: 5px;
-        box-sizing: border-box;
-        font-size: 16px;
-    }
-    button {
-        background-color: #00008b; 
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-    button:hover {
-        background-color: #4169e1; 
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동한(대한국) 키릴 표기</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            color: #8B4513;
+        }
+        textarea {
+            width: 80%;
+            margin: 0 auto;
+            display: block;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #8B4513;
+            border-radius: 5px;
+            resize: none;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #8B4513;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #A0522D;
+        }
+        #output {
+            width: 80%;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 18px;
+            color: #8B4513;
+            border: 2px solid #8B4513;
+            border-radius: 5px;
+            background-color: #fff;
+            overflow-wrap: break-word;
+        }
+        .center {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-<h1>친희 말투 편환키</h1>
-<textarea id="inputText" rows="4" cols="50" placeholder="한글을 입력하세요"></textarea><br>
-<button onclick="convertHangul()">변환</button><br>
-<div id="outputText"></div>
+    <h2 class="center">대한국(동한) 키릴 표기</h2>
+    <div class="center">
+        <input type="checkbox" id="accentCheckbox" checked onchange="convertToCyrillic()">
+        <label for="accentCheckbox">위 토치키 여부</label>
+        <h5 class="center">위 토치키 - 키릴 문자의 글자 사이를 구별하기 쉽게 만들어주는 신표기</h5><br><br>
+    </div>
+    <textarea id="inputText" rows="4" cols="50" placeholder="키릴 표기로 변환할 한글을 입력해주세요." oninput="convertToCyrillic()"></textarea><br>
+    <!-- <button onclick="convertToCyrillic()">변환하기</button><br><br> -->
+    <div id="output"></div>
 
-<script src="hangul.js"></script>
-<script>
-function convertHangul() {
-    var input = document.getElementById("inputText").value;
-    
-    var disassembled = Hangul.disassemble(input);
-    for (var i = 0; i < disassembled.length; i++) {
-        switch (disassembled[i]) {
-            case 'ㄱ':
-                disassembled[i] = 'ㅋ';
-                break;
-            case 'ㄲ':
-                disassembled[i] = 'ㅋ';
-                break;
-            case 'ㅈ':
-                disassembled[i] = 'ㅊ';
-                break;
-            case 'ㅂ':
-                disassembled[i] = 'ㅍ';
-                break;
-            case 'ㄷ':
-                disassembled[i] = 'ㅌ';
-                break;
-            case 'ㄸ':
-                disassembled[i] = 'ㅌ';
-                break;
-            case 'ㅃ':
-                disassembled[i] = 'ㅍ';
-                break;
+    <h2 class="center">- 대한국(동한) 언어 순화 본부 -</h2>
+
+    <script src="hangul.js" type="text/javascript"></script>
+    <script>
+        function insertAccent(text) {
+            let result = [];
+            for (let char of text) {
+                result.push(char);
+                if ('가' <= char && char <= '힣') {
+                    result.push('´');
+                }
+            }
+            return result.join('');
         }
-    }
-    
-    var output = Hangul.assemble(disassembled);
-    
-    document.getElementById("outputText").innerText = output;
-}
-</script>
-</body>
-</html>
+
+        function convertToCyrillic() {
+            let text = document.getElementById('inputText').value;
+            let useAccent = document.getElementById('accentCheckbox').checked;
+            if (useAccent) {
+                text = insertAccent(text); // 한글 뒤에 '´' 붙이기
+            }
+            let jamoArray = Hangul.disassemble(text); // Hangul.js의 분해 함수를 사용하여 한글을 분리
+            let russian = '';
+            for (let jamo of jamoArray) {
+                // 각 분리된 자음/모음에 대해 키릴 문자로 변환하는 작업 수행
+                switch (jamo) {
+                    case 'ㄱ':
+                        russian += 'к';
+                        break;
+                    case 'ㄴ':
+                        russian += 'н';
+                        break;
+                    case 'ㄷ':
+                        russian += 'т';
+                        break;
+                    case 'ㄹ':
+                        russian += 'р';
+                        break;
+                    case 'ㅁ':
+                        russian += 'м';
+                        break;
+                    case 'ㅂ':
+                        russian += 'п';
+                        break;
+                    case 'ㅅ':
+                        russian += 'с';
+                        break;
+                    case 'ㅇ':
+                        russian += 'н';
+                        break;
+                    case 'ㅈ':
+                        russian += 'ч';
+                        break;
+                    case 'ㅊ':
+                        russian += 'чх';
+                        break;
+                    case 'ㅋ':
+                        russian += 'кх';
+                        break;
+                    case 'ㅌ':
+                        russian += 'тх';
+                        break;
+                    case 'ㅍ':
+                        russian += 'пх';
+                        break;
+                    case 'ㅎ':
+                        russian += 'х';
+                        break;
+                    case 'ㄲ':
+                        russian += 'кк';
+                        break;
+                    case 'ㄸ':
+                        russian += 'тт';
+                        break;
+                    case 'ㅃ':
+                        russian += 'пп';
+                        break;
+                    case 'ㅆ':
+                        russian += 'сс';
+                        break;
+                    case 'ㅉ':
+                        russian += 'чч';
+                        break;
+                    case 'ㅏ':
+                        russian += 'a';
+                        break;
+                    case 'ㅑ':
+                        russian += 'я';
+                        break;
+                    case 'ㅓ':
+                        russian += 'е';
+                        break;
+                    case 'ㅕ':
+                        russian += 'ё';
+                        break;
+                    case 'ㅗ':
+                        russian += 'o';
+                        break;
+                    case 'ㅛ':
+                        russian += 'ё';
+                        break;
+                    case 'ㅜ':
+                        russian += 'у';
+                        break;
+                    case 'ㅠ':
+                        russian += 'ю';
+                        break;
+                    case 'ㅡ':
+                        russian += 'ы';
+                        break;
+                    case 'ㅣ':
+                        russian += 'и';
+                        break;
+                    case 'ㅐ':
+                        russian += 'aй';
+                        break;
+                    case 'ㅒ':
+                        russian += 'яй';
+                        break;
+                    case 'ㅔ':
+                        russian += 'э';
+                        break;
+                    case 'ㅖ':
+                        russian += 'е';
+                        break;
+                    case 'ㅚ':
+                        russian += 'oй';
+                        break;
+                    case 'ㅟ':
+                        russian += 'уй';
+                        break;
+                    case 'ㅢ':
+                        russian += 'ы';
+                        break;
+                    case 'ㅘ':
+                        russian += 'вa';
+                        break;
+                    case 'ㅝ':
+                        russian += 'вo';
+                        break;
+                    case 'ㅙ':
+                        russian += 'вaй';
+                        break;
+                    case 'ㅞ':
+                        russian += 'вэ';
+                        break;
+                    case 'ㄳ':
+                        russian += 'кс';
+                        break;
+                    case 'ㄼ':
+                        russian += 'рб';
+                        break;
+                    case 'ㄿ':
+                        russian += 'рпх';
+                        break;
+                    case 'ㄺ':
+                        russian += 'рг';
+                        break;
+                    case 'ㄾ':
+                        russian += 'ртх';
+                        break;
+                    case 'ㄽ':
+                        russian += 'рс';
+                        break;
+                    case 'ㅀ':
+                        russian += 'рх';
+                        break;
+                    case 'ㄻ':
+                        russian += 'рм';
+                        break;
+                    case 'ㄵ':
+                        russian += 'нз';
+                        break;
+                    case 'ㄶ':
+                        russian += 'нх';
+                        break;
+                    default:
+                        russian += jamo; // 한글이 아닌 경우 그대로 추가
+                }
+            }
+            document.getElementById('output').innerText = russian;
+        }
+    </script>
