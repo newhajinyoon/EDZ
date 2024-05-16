@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동한(대한국) 키릴 표기 -> 한글 표기 변환</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            color: #8B4513;
+        }
+        textarea {
+            width: 80%;
+            margin: 0 auto;
+            display: block;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #8B4513;
+            border-radius: 5px;
+            resize: none;
+        }
+        #output {
+            width: 80%;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 18px;
+            color: #8B4513;
+            border: 2px solid #8B4513;
+            border-radius: 5px;
+            background-color: #fff;
+            overflow-wrap: break-word;
+        }
+        .center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2 class="center">동한(대한국) 키릴 표기 -> 한글 표기 변환</h2>
+    <h4 class="center">* 윗토치키가 없으면 부정확합니다 *</h4>
+    <textarea id="inputText" rows="4" cols="50" placeholder="한글로 변환할 키릴 문자를 입력해주세요." oninput="convertToHangul()"></textarea><br><br>
+    <div id="output"></div>
+
+    <script src="hangul.js" type="text/javascript"></script>
+    <script>
+        function convertToHangul() {
+            let text = document.getElementById('inputText').value;
+            let hangul = text;
+
+            // 세 글자인 키릴 문자 변환
+            hangul = hangul.replace(/вaй/g, 'ㅙ');
+            hangul = hangul.replace(/ртх/g, 'ㄾ');
+            hangul = hangul.replace(/рпх/g, 'ㄿ');
+
+
+            // 두 글자인 키릴 문자 변환
+            hangul = hangul.replace(/ль/g, 'ㄹ');
+            hangul = hangul.replace(/кх/g, 'ㅋ');
+            hangul = hangul.replace(/тх/g, 'ㅌ');
+            hangul = hangul.replace(/пх/g, 'ㅍ');
+            hangul = hangul.replace(/чх/g, 'ㅊ');
+            hangul = hangul.replace(/рб/g, 'ㄼ');
+            hangul = hangul.replace(/рг/g, 'ㄺ');
+            hangul = hangul.replace(/рс/g, 'ㄽ');
+            hangul = hangul.replace(/рх/g, 'ㅀ');
+            hangul = hangul.replace(/рм/g, 'ㄻ');
+            hangul = hangul.replace(/нз/g, 'ㄵ');
+            hangul = hangul.replace(/нх/g, 'ㄶ');
+            hangul = hangul.replace(/вo/g, 'ㅝ');
+            hangul = hangul.replace(/вa/g, 'ㅘ');
+            hangul = hangul.replace(/вэ/g, 'ㅞ');
+            hangul = hangul.replace(/oй/g, 'ㅚ');
+            hangul = hangul.replace(/уй/g, 'ㅟ');
+            hangul = hangul.replace(/aй/g, 'ㅐ');
+            hangul = hangul.replace(/яй/g, 'ㅒ');
+            hangul = hangul.replace(/нъ/g, 'ㅇ');
+            hangul = hangul.replace(/ый/g, 'ㅢ');
+            hangul = hangul.replace(/йŏ/g, 'ㅕ');
+
+            // 한 글자인 키릴 문자 변환
+            hangul = hangul.replace(/к/g, 'ㄱ');
+            hangul = hangul.replace(/н/g, 'ㄴ');
+            hangul = hangul.replace(/т/g, 'ㄷ');
+            hangul = hangul.replace(/р/g, 'ㄹ');
+            hangul = hangul.replace(/м/g, 'ㅁ');
+            hangul = hangul.replace(/п/g, 'ㅂ');
+            hangul = hangul.replace(/с/g, 'ㅅ');
+            hangul = hangul.replace(/ч/g, 'ㅈ');
+            hangul = hangul.replace(/х/g, 'ㅎ');
+            hangul = hangul.replace(/э/g, 'ㅔ');
+            hangul = hangul.replace(/е/g, 'ㅖ');
+            hangul = hangul.replace(/a/g, 'ㅏ');
+            hangul = hangul.replace(/я/g, 'ㅑ');
+            hangul = hangul.replace(/ŏ/g, 'ㅓ');
+            hangul = hangul.replace(/o/g, 'ㅗ');
+            hangul = hangul.replace(/у/g, 'ㅜ');
+            hangul = hangul.replace(/ю/g, 'ㅠ');
+            hangul = hangul.replace(/ы/g, 'ㅡ');
+            hangul = hangul.replace(/и/g, 'ㅣ');
+
+
+            // 쌍자음 변환
+            hangul = hangul.replace(/ㅈㅈ/g, 'ㅉ');
+            hangul = hangul.replace(/ㄷㄷ/g, 'ㄸ');
+            hangul = hangul.replace(/ㄱㄱ/g, 'ㄲ');
+            hangul = hangul.replace(/ㅂㅂ/g, 'ㅃ');
+            hangul = hangul.replace(/ㅅㅅ/g, 'ㅆ');
+            hangul = hangul.replace(/´/g, '');
+            // Hangul.js의 assemble 기능을 사용하여 한글로 합치기
+            let assembledHangul = Hangul.assemble(hangul.split(''));
+
+            document.getElementById('output').innerText = assembledHangul;
+        }
+    </script>
+</body>
+</html>
